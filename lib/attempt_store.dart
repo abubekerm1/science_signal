@@ -31,7 +31,22 @@ class AttemptStore {
     });
   }
 
+  static int remainingT12Errors = 2;
+
   Future<void> commit() async {
+    const testT12 = bool.fromEnvironment('SCIENCE_SIGNAL_T12');
+    if (kDebugMode && testT12 && remainingT12Errors > 0) {
+      final code = remainingT12Errors == 2
+          ? 'unavailable'
+          : 'resource-exhausted';
+      remainingT12Errors--;
+      throw FirebaseException(
+        plugin: 'cloud_firestore',
+        code: code,
+        message: 'T12 injected save error',
+      );
+    }
+
     final payload = {...fields, 'submittedAt': FieldValue.serverTimestamp()};
 
     await FirebaseFirestore.instance.runTransaction((transaction) async {

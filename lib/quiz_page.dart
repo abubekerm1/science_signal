@@ -121,7 +121,11 @@ class _QuizPageState extends State<QuizPage> {
         'unavailable' => 'Firestore is unavailable. Check your connection.',
         _ => 'Firestore error (${error.code}).',
       };
-      showCloudError(detail);
+      if (error.message == 'T12 injected save error') {
+        showCloudError('T12 test: injected ${error.code}. $detail');
+      } else {
+        showCloudError(detail);
+      }
     } on FormatException catch (error) {
       if (isCurrentRound(id)) showCloudError(error.message);
     } finally {
