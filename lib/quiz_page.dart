@@ -91,7 +91,7 @@ class _QuizPageState extends State<QuizPage> {
         });
 
         if (timedOut) return;
-        timestamp = await store.readFromServer();
+        timestamp = await store.readFromServer(afterCommit: true);
       }
 
       if (!isCurrentRound(id) || timedOut) return;
@@ -112,7 +112,10 @@ class _QuizPageState extends State<QuizPage> {
     } on FirebaseException catch (error) {
       if (!isCurrentRound(id)) return;
       final detail = switch (error.code) {
-        'permission-denied' => 'Firestore permission denied.',
+        'permission-denied' =>
+          error.message == 'T09 injected verification failure'
+              ? 'T09 test: injected permission-denied.'
+              : 'Firestore permission denied.',
         'unauthenticated' => 'Your sign-in session is unavailable.',
         'resource-exhausted' => 'Firestore quota limit reached.',
         'unavailable' => 'Firestore is unavailable. Check your connection.',

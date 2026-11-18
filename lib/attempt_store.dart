@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class AttemptCollision implements Exception {
   const AttemptCollision();
@@ -43,7 +44,16 @@ class AttemptStore {
     });
   }
 
-  Future<Timestamp?> readFromServer() async {
+  Future<Timestamp?> readFromServer({bool afterCommit = false}) async {
+    const testT09 = bool.fromEnvironment('SCIENCE_SIGNAL_T09');
+    if (kDebugMode && testT09 && afterCommit) {
+      throw FirebaseException(
+        plugin: 'cloud_firestore',
+        code: 'permission-denied',
+        message: 'T09 injected verification failure',
+      );
+    }
+
     final verified = await ref.get(const GetOptions(source: Source.server));
 
     if (verified.metadata.isFromCache || verified.metadata.hasPendingWrites) {

@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
+import 'find_round_page.dart';
 import 'quiz_page.dart';
 
 Future<void> main() async {
@@ -90,6 +91,16 @@ class _SignInPageState extends State<SignInPage> {
                       );
                     },
                     child: const Text('Start quiz'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (context) => FindRoundPage(uid: user.uid),
+                        ),
+                      );
+                    },
+                    child: const Text('Find saved round'),
                   ),
                   TextButton(
                     onPressed: () async {
