@@ -3,12 +3,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
+import 'quiz_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MaterialApp(home: SignInPage()));
 }
 
@@ -82,6 +81,16 @@ class _SignInPageState extends State<SignInPage> {
                 children: [
                   Text('Signed in as ${user.email}'),
                   Text('UID: ${user.uid}'),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (context) => QuizPage(uid: user.uid),
+                        ),
+                      );
+                    },
+                    child: const Text('Start quiz'),
+                  ),
                   TextButton(
                     onPressed: () async {
                       await FirebaseAuth.instance.signOut();
